@@ -186,7 +186,18 @@ function openSong(i, keepRatio) {
     const pre = document.createElement('pre');
     pre.className = 'txt';
     pre.style.fontSize = Math.round(15 * zoom / 0.7) + 'px';
-    pre.textContent = s.text;
+    // en líneas de acordes, cada acorde es un <span> tocable que abre su diagrama
+    const NL = String.fromCharCode(10);
+    pre.append(...s.text.split(NL).flatMap((ln, k, all) => {
+      const nl = k < all.length - 1 ? NL : '';
+      if (!Chords.chordLine(ln)) return [ln + nl];
+      return ln.split(/(\s+|[-–,|])/).map((t) => {
+        if (!Chords.parse(t)) return t;
+        const sp = document.createElement('span');
+        sp.className = 'ch'; sp.textContent = t; sp.onclick = () => showChords([t], t);
+        return sp;
+      }).concat(nl);
+    }));
     box.replaceChildren(pre);
     scrollTo(0, ratio * document.documentElement.scrollHeight);
     stopScroll();
@@ -208,6 +219,48 @@ function openSong(i, keepRatio) {
   scrollTo(0, ratio * document.documentElement.scrollHeight);
   stopScroll();
 }
+
+/* ---------- Acordes: diagramas de la canción ---------- */
+function showChords(names, title) {
+  $('#ch-title').textContent = title || 'Acordes';
+  $('#ch-grid').innerHTML = names.length === 1
+    ? Chords.svg(names[0], true)
+    : names.map((n) => `<div>${Chords.svg(n)}</div>`).join('') || '<p>No se detectaron acordes.</p>';
+  $('#chords').hidden = false;
+}
+
+// Acordes de la canción en orden de aparición: PDF.js nos da el texto con su posición en la página
+async function songChords(s) {
+  const lines = [];
+  if (s.text) lines.push(...s.text.split(String.fromCharCode(10)));
+  else {
+    const pdf = await pdfPromise;
+    const pages = {};
+    for (const [p] of s.segs) pages[p] ||= pdf.getPage(p).then(async (pg) => ({ H: pg.view[3], items: (await pg.getTextContent()).items }));
+    for (const [p, c, y0, y1] of s.segs) {
+      const { H, items } = await pages[p];
+      const [cx0, cx1] = COLS[c];
+      const rows = {};                                   // agrupa por renglón (misma altura)
+      for (const it of items) {
+        const x = it.transform[4], y = H - it.transform[5];
+        if (x < cx0 - 4 || x > cx1 || y < y0 || y > y1 + 4 || !it.str.trim()) continue;
+        (rows[Math.round(y / 3)] ||= []).push([x, it.str]);
+      }
+      Object.keys(rows).sort((a, b) => a - b).forEach((k) => lines.push(rows[k].sort((a, b) => a[0] - b[0]).map((r) => r[1]).join(' ')));
+    }
+  }
+  const seen = new Set();
+  for (const ln of lines) for (const t of Chords.chordLine(ln) || []) seen.add(t);
+  return [...seen];
+}
+
+$('#chbtn').onclick = async () => {
+  showChords([], 'Acordes');
+  $('#ch-grid').innerHTML = '<p>Buscando acordes…</p>';
+  try { showChords(await songChords(songs[current]), 'Acordes de la canción'); } catch { toast('No se pudieron leer los acordes'); }
+};
+$('#ch-close').onclick = () => ($('#chords').hidden = true);
+addEventListener('keydown', (e) => e.key === 'Escape' && ($('#chords').hidden = true));
 
 /* ---------- Autoscroll + Wake Lock ---------- */
 let playing = false, pos = 0, last = 0, lock = null;
@@ -259,6 +312,7 @@ $('#next').onclick = () => go(1);
 let homeHash = '';                 // última pantalla de inicio (índice o artista) para el botón "Índice"
 const homeY = {};                  // scroll recordado por pantalla de inicio
 function route() {
+  $('#chords').hidden = true;
   const h = location.hash;
   const m = h.match(/^#s\/(\d+)$/);
   const i = m ? songs.findIndex((s) => s.id === +m[1]) : -1;

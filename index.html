@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon.svg">
 <link rel="apple-touch-icon" href="icon-192.png">
-<link rel="stylesheet" href="style.css?v=11">
+<link rel="stylesheet" href="style.css?v=13">
 </head>
 <body>
 
@@ -46,6 +46,7 @@
     </div>
     <div class="row">
       <input id="speed" type="range" min="5" max="120" step="1" aria-label="Velocidad">
+      <button id="chbtn" class="btn">VER ACORDES</button>
       <button id="zout" class="btn icon" aria-label="Alejar">−</button>
       <button id="zin" class="btn icon" aria-label="Acercar">+</button>
       <button id="theme" class="btn icon" aria-label="Modo oscuro">◐</button>
@@ -53,8 +54,15 @@
   </footer>
 </section>
 
+<!-- Panel de acordes: diagramas de la canción (o de un acorde tocado) -->
+<aside id="chords" hidden>
+  <header><b id="ch-title">Acordes</b><button id="ch-close" class="btn icon" aria-label="Cerrar">✕</button></header>
+  <div id="ch-grid"></div>
+</aside>
+
 <div id="toast" hidden></div>
 <script src="vendor/pdf.min.js"></script>
-<script src="app.js?v=11"></script>
+<script src="chords.js?v=13"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>

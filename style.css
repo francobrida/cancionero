@@ -66,3 +66,15 @@ html.dark .band { filter:invert(1) hue-rotate(180deg); }
 
 /* mensaje casi oculto bajo la portada */
 .hero .ghost { display:block; margin-top:10px; font-size:11px; color:var(--ghost); letter-spacing:.04em; }
+
+/* panel de acordes */
+#chords { position:fixed; left:0; right:0; bottom:0; max-height:70vh; z-index:8; overflow:auto; background:var(--bg); border-top:2px solid var(--acc); padding:12px 12px calc(150px + env(safe-area-inset-bottom)); box-shadow:0 -8px 24px rgba(0,0,0,.35); }
+#chords header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+#ch-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(92px, 1fr)); gap:10px; color:var(--fg); }
+#ch-grid p { grid-column:1/-1; color:var(--mut); }
+.dg { width:100%; height:auto; }
+.dg.big { grid-column:1/-1; max-width:240px; margin:0 auto; }
+.ch { color:var(--acc); font-weight:700; cursor:pointer; border-bottom:1px dotted var(--acc); }
+@media (hover: hover) { .ch:hover { background:var(--card); } }
+#chbtn { font-size:13px; font-weight:700; letter-spacing:.03em; white-space:nowrap; padding:0 12px; }
+#speed { min-width:48px; }
