@@ -48,3 +48,18 @@ html.dark .band { filter:invert(1) hue-rotate(180deg); }
 #back { flex:1.2; }
 #speed { flex:1; min-width:0; height:40px; accent-color:var(--acc); }
 #toast { position:fixed; left:12px; right:12px; bottom:150px; z-index:9; background:#222; color:#fff; padding:12px; border-radius:10px; text-align:center; }
+
+/* canciones de texto: tipografía de ancho fijo para alinear acordes */
+.txt { margin:0 auto; padding:12px 14px; max-width:100%; overflow-x:auto; font-family:ui-monospace,Menlo,Consolas,monospace; line-height:1.35; background:var(--card); color:var(--fg); }
+
+/* hover y foco (solo con puntero real: en el móvil no queda "pegado") */
+#list li:not(.h), .btn, #tabs button, #letters span { cursor:pointer; transition:background-color .12s, border-color .12s, color .12s, transform .12s; }
+@media (hover: hover) {
+  #list li:not(.h):hover { background:var(--card); box-shadow:inset 3px 0 0 var(--acc); }
+  .btn:hover { border-color:var(--acc); }
+  .btn.primary:hover { filter:brightness(1.1); }
+  #tabs button:not(.on):hover { border-color:var(--acc); color:var(--fg); }
+  #letters span:hover { color:var(--fg); }
+}
+.btn:focus-visible, #tabs button:focus-visible, #q:focus-visible, #speed:focus-visible { outline:2px solid var(--acc); outline-offset:2px; }
+#q:focus { border-color:var(--acc); outline:none; }

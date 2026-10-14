@@ -1,0 +1,7 @@
+titulo: NOMBRE DE LA CANCION
+artista: NOMBRE DEL ARTISTA
+genero: ROCK
+
+(Desde acá hacia abajo va el texto de la canción, tal cual lo copies:
+acordes sobre cada línea de letra. Se muestra con tipografía de ancho fijo
+para que los acordes queden alineados.)

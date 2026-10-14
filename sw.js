@@ -2,7 +2,7 @@
 // - PDF y librerías (pesados, no cambian): primero caché.
 // - El resto (app, índice, estilos): primero red, y caché si no hay conexión → siempre ves la última versión.
 // Al cambiar el PDF o las librerías, subí VERSION.
-const VERSION = 'cancionero-v8';
+const VERSION = 'cancionero-v10';
 const FILES = ['./', 'index.html', 'app.js', 'style.css', 'index.json', 'cancionero.pdf',
   'vendor/pdf.min.js', 'vendor/pdf.worker.min.js', 'manifest.webmanifest', 'icon.svg', 'icon-192.png', 'icon-512.png'];
 

@@ -32,3 +32,9 @@ Después subí `VERSION` en `sw.js` para que los móviles actualicen la caché.
 Solo hacen falta: `index.html style.css app.js index.json cancionero.pdf sw.js manifest.webmanifest icon* vendor/`.
 
 La primera visita descarga el PDF (11 MB) y queda cacheado: después funciona sin conexión.
+
+## Agregar canciones (texto pegado)
+1. Copiá `canciones/_plantilla.txt` a `canciones/mi_cancion.txt` (los que empiezan con `_` se ignoran).
+2. Completá `titulo:`, `artista:` y `genero:` (ROCK, POP, CUMBIA… o uno nuevo), dejá **una línea en blanco** y pegá debajo el texto con los acordes.
+3. `python build_index.py cancionero.pdf`
+4. Subí `VERSION` en `sw.js` y `?v=` en `index.html`, luego `git add -A && git commit -m "..." && git push`.

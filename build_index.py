@@ -140,6 +140,24 @@ for i, e in enumerate(merged):
         "startPage": e[0], "segs": segments(e[0], e[1], max(e[2] - PAD, TOP), ep, ec, ey),
     })
 
+# 3b) Canciones extra: canciones/*.txt  (cabecera "titulo:/artista:/genero:", línea en blanco, texto)
+import glob, os
+for path in sorted(glob.glob("canciones/*.txt")):
+    if os.path.basename(path).startswith("_"):
+        continue  # plantillas
+    raw = open(path, encoding="utf-8-sig").read().replace("\r\n", "\n")
+    head, _, body = raw.partition("\n\n")
+    meta = dict(l.split(":", 1) for l in head.split("\n") if ":" in l)
+    meta = {k.strip().lower(): v.strip() for k, v in meta.items()}
+    if not meta.get("titulo") or not body.strip():
+        dubious.append(f"canción extra inválida (falta titulo: o texto): {path}")
+        continue
+    songs.append({
+        "id": len(songs) + 1, "title": meta["titulo"].upper(), "norm": norm(meta["titulo"]),
+        "artist": meta.get("artista", "VARIOS").upper(), "section": meta.get("genero", "OTROS").upper(),
+        "startPage": 0, "segs": [], "text": body.strip("\n"),
+    })
+
 # 4) Búsqueda + casos dudosos
 for s in songs:
     s["search"] = norm(s["title"] + " " + s["artist"])
@@ -154,7 +172,7 @@ for i, s in enumerate(songs):
         dubious.append(f"título raro: '{s['title']}' p{s['startPage']} ({s['artist']})")
     if not s["artist"]:
         dubious.append(f"sin artista: '{s['title']}' p{s['startPage']}")
-    if not s["segs"]:
+    if not s["segs"] and "text" not in s:
         dubious.append(f"sin contenido: '{s['title']}' p{s['startPage']}")
     if len(s["segs"]) > 9:
         dubious.append(f"larga: '{s['title']}' ({s['artist']}) {len(s['segs'])} columnas desde p{s['startPage']}")

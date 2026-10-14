@@ -182,6 +182,16 @@ function openSong(i, keepRatio) {
   const scale = width / (COLS[0][1] - COLS[0][0]);
   observer?.disconnect();
   const box = $('#pages');
+  if (s.text) {                                       // canción agregada como texto (canciones/*.txt)
+    const pre = document.createElement('pre');
+    pre.className = 'txt';
+    pre.style.fontSize = Math.round(15 * zoom / 0.7) + 'px';
+    pre.textContent = s.text;
+    box.replaceChildren(pre);
+    scrollTo(0, ratio * document.documentElement.scrollHeight);
+    stopScroll();
+    return;
+  }
   box.replaceChildren(...bands(s).map((b) => {
     const el = document.createElement('div');
     el.className = 'band';
