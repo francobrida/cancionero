@@ -1,0 +1,12 @@
+{
+  "_doc": "join: título (tal cual está en index.json) que se une con el título detectado justo después. drop: títulos falsos a eliminar.",
+  "join": [
+    "ELLA USO MI CABEZA COMO UN",
+    "CANCIÓN PARA LOS DÍAS DE LA",
+    "CUANDO YA ME EMPIECE A",
+    "TRENES, CAMIONES Y",
+    "BALADA DEL DIABLO Y LA",
+    "UN MAL DELITO ENTRE CONFIAR Y"
+  ],
+  "drop": []
+}
